@@ -10,12 +10,14 @@ mongoose
     console.log("Connected to MongoDB");
   })
   .catch((err) => {
-    console.error("Failed to connect to MongoDB:");
+    console.error("Failed to connect to MongoDB:", err);
   });
 
 const app = express();
 
-app.use("/server", userRouter);
+app.use(express.json());
+
+app.use("/", userRouter);
 
 app.listen(5000, () => {
   console.log("Server started on port number 5000");
