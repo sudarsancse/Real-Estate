@@ -19,6 +19,16 @@ app.use(express.json());
 
 app.use("/", userRouter);
 
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal server Error";
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
+});
+
 app.listen(5000, () => {
   console.log("Server started on port number 5000");
 });
