@@ -5,7 +5,7 @@ import SignUp from "./Components/Pages/SignUp";
 import Profile from "./Components/Pages/Profile";
 import About from "./Components/Pages/About";
 import Header from "./Components/Header";
-import PrivateRoute from "./Components/Pages/PrivateRoute";
+import PrivateRoute from "./Components/PrivateRoute";
 
 function App() {
   return (
