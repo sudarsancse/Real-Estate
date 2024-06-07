@@ -1,7 +1,11 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
-import {signInFailure, signInSuccess} from "../../Redux/User/userSlice";
+import {
+  signInFailure,
+  signInSuccess,
+  singInStart,
+} from "../../Redux/User/userSlice";
 
 function Signin() {
   const [formData, setForData] = useState({});
@@ -19,7 +23,7 @@ function Signin() {
   const handelSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      disPatch(singInStart());
       const res = await fetch("/signin", {
         method: "POST",
         headers: {
