@@ -1,11 +1,14 @@
 import React, {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {Link, useNavigate} from "react-router-dom";
+import {signInFailure, signInSuccess} from "../../Redux/User/userSlice";
 
 function Signin() {
   const [formData, setForData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const {error, loading} = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const disPatch = useDispatch();
   const handelChange = (e) => {
     setForData({
       ...formData,
@@ -27,16 +30,13 @@ function Signin() {
       const data = await res.json();
       console.log(data);
       if (data.success === false) {
-        setLoading(false);
-        setError(data.message);
+        disPatch(signInFailure(data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
+      disPatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
-      setLoading(false);
-      setError(error.message);
+      disPatch(signInFailure(error.message));
     }
 
     //console.log(data);
