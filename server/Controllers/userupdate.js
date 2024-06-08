@@ -4,14 +4,14 @@ import User from "../models/UserModel.js";
 import {errorHandler} from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 
-export const userupdate = async (req, res, next) => {
+export const update = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "You can only update your accoutnt!"));
   try {
     if (req.body.password) {
       req.body.password = bcryptjs.hashSync(req.body.password, 15);
     }
-    const updateUser = await User.findByIdAndDelete(
+    const updateUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
