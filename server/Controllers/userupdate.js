@@ -1,9 +1,8 @@
-//USER -Update route page
-
 import User from "../models/UserModel.js";
 import {errorHandler} from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 
+//USER -Update route page
 export const update = async (req, res, next) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "You can only update your accoutnt!"));
@@ -26,6 +25,19 @@ export const update = async (req, res, next) => {
     const {password, ...rest} = updateUser._doc;
 
     res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//delete the user
+export const deleteUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "You can only delete your own account!"));
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.clearCookie("access_token");
+    res.status(200).json("User has been deleted!");
   } catch (error) {
     next(error);
   }
