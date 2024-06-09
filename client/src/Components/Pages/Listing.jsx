@@ -6,16 +6,32 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import {app} from "../../fireBase.js";
+import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
-export default function Listing() {
+export default function CreateListing() {
   const [files, setFiles] = useState([]);
   const [imgUploadError, setImgUploadError] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const {currentUser} = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const [fromData, setFromData] = useState({
     imageUrls: [],
+    name: "",
+    description: "",
+    address: "",
+    typeOfPlace: "rent",
+    price: null,
+    discountPrice: null,
+    barthRoom: 1,
+    kitchenRoom: 1,
+    badRoom: 2,
+    offer: false,
+    furnished: false,
+    parking: false,
   });
-
-  console.log(fromData);
 
   //Image submit
   const handelImageSubmit = (e) => {
@@ -78,13 +94,80 @@ export default function Listing() {
       imageUrls: fromData.imageUrls.filter((_, i) => i !== index),
     });
   };
+
+  // form input data
+  const handelChange = (e) => {
+    if (e.target.id === "sale" || e.target.id === "rent") {
+      setFromData({
+        ...fromData,
+        type: e.target.id,
+      });
+    }
+    if (
+      e.target.id === "parking" ||
+      e.target.id === "furnished" ||
+      e.target.id === "offer"
+    ) {
+      setFromData({
+        ...fromData,
+        [e.target.id]: e.target.checked,
+      });
+    }
+    if (
+      e.target.type === "number" ||
+      e.target.type === "text" ||
+      e.target.type === "textarea"
+    ) {
+      setFromData({
+        ...fromData,
+        [e.target.id]: e.target.value,
+      });
+    }
+  };
+
+  // send data to backend
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (fromData.imageUrls.length < 1)
+        return setError("You must upload at least one image");
+      if (+fromData.price < +fromData.discountPrice)
+        return setError("Discount price must be lower then the Regular Price");
+      setLoading(true);
+      setError(false);
+      const res = await fetch("/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...fromData,
+          UserRef: currentUser._id,
+        }),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (data.success === false) {
+        setError(data.message);
+      }
+      navigate(`/listing/${data._id}`);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <main className=" p-3 max-w-4xl mx-auto">
       <h1 className=" text-3xl font-semibold text-center my-7">
         {" "}
         Create a Listing
       </h1>
-      <form className=" flex flex-col sm:flex-row gap-4">
+      <form
+        onSubmit={handleSubmit}
+        className=" flex flex-col sm:flex-row gap-4"
+      >
         <div className=" flex flex-col gap-4 flex-1">
           <input
             type="text"
@@ -94,6 +177,8 @@ export default function Listing() {
             maxLength="50"
             minLength="10"
             required
+            onChange={handelChange}
+            value={fromData.name}
           />
           <textarea
             type="text"
@@ -101,6 +186,8 @@ export default function Listing() {
             className=" border p-3 rounded-lg"
             id="description"
             required
+            onChange={handelChange}
+            value={fromData.description}
           />
           <input
             type="text"
@@ -108,26 +195,58 @@ export default function Listing() {
             className=" border p-3 rounded-lg"
             id="address"
             required
+            onChange={handelChange}
+            value={fromData.address}
           />
           <div className=" flex gap-6 flex-wrap">
             <div className=" flex gap-2">
-              <input type="checkbox" id="sale" className=" w-5" />
+              <input
+                type="checkbox"
+                id="sale"
+                className=" w-5"
+                onChange={handelChange}
+                checked={fromData.type === "sale"}
+              />
               <span>Sell</span>
             </div>
             <div className=" flex gap-2">
-              <input type="checkbox" id="rest" className=" w-5" />
+              <input
+                type="checkbox"
+                id="rent"
+                className=" w-5"
+                onChange={handelChange}
+                checked={fromData.type === "rent"}
+              />
               <span>Rent</span>
             </div>
             <div className=" flex gap-2">
-              <input type="checkbox" id="parking" className=" w-5" />
+              <input
+                type="checkbox"
+                id="parking"
+                className=" w-5"
+                onChange={handelChange}
+                checked={fromData.parking}
+              />
               <span>Parking</span>
             </div>
             <div className=" flex gap-2">
-              <input type="checkbox" id="furnished" className=" w-5" />
+              <input
+                type="checkbox"
+                id="furnished"
+                className=" w-5"
+                onChange={handelChange}
+                checked={fromData.furnished}
+              />
               <span>Furnished</span>
             </div>
             <div className=" flex gap-2">
-              <input type="checkbox" id="offer" className=" w-5" />
+              <input
+                type="checkbox"
+                id="offer"
+                className=" w-5"
+                onChange={handelChange}
+                checked={fromData.offer}
+              />
               <span>Offer</span>
             </div>
           </div>
@@ -140,6 +259,8 @@ export default function Listing() {
                 className=" p-3 border border-gray-300 rounded-lg"
                 min="1"
                 max="15"
+                onChange={handelChange}
+                value={fromData.badRoom}
               />
               <p className="">Bed Room</p>
             </div>
@@ -151,6 +272,8 @@ export default function Listing() {
                 className=" p-3 border border-gray-300 rounded-lg"
                 min="1"
                 max="15"
+                onChange={handelChange}
+                value={fromData.barthRoom}
               />
               <p className="">Bath Room</p>
             </div>
@@ -162,6 +285,8 @@ export default function Listing() {
                 className=" p-3 border border-gray-300 rounded-lg"
                 min="1"
                 max="15"
+                onChange={handelChange}
+                value={fromData.kitchenRoom}
               />
               <p className="">Kitchen</p>
             </div>
@@ -171,24 +296,38 @@ export default function Listing() {
                 required
                 id="price"
                 className=" p-3 border border-gray-300 rounded-lg"
+                onChange={handelChange}
+                value={fromData.price}
               />
               <div className=" flex flex-col items-center">
                 <p className="">Regular price</p>
-                <span className=" text-sm">(Rs / month) </span>
+                {fromData.type === "rent" && (
+                  <span className=" text-green-700 text-sm">
+                    (Rs: {fromData.price} / month)
+                  </span>
+                )}
               </div>
             </div>
-            <div className=" flex items-center gap-2">
-              <input
-                type="number"
-                required
-                id="discountPrice"
-                className=" p-3 border border-gray-300 rounded-lg"
-              />
-              <div className=" flex flex-col items-center">
-                <p className="">Discounted price</p>
-                <span className=" text-sm">(Rs / month) </span>
+            {fromData.offer && (
+              <div className=" flex items-center gap-2">
+                <input
+                  type="number"
+                  required
+                  id="discountPrice"
+                  className=" p-3 border border-gray-300 rounded-lg"
+                  onChange={handelChange}
+                  value={fromData.discountPrice}
+                />
+                <div className=" flex flex-col items-center">
+                  <p className="">Discounted price</p>
+                  {fromData.type === "rent" && (
+                    <span className=" text-green-700 text-sm">
+                      (Rs: {fromData.discountPrice} / month)
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
         <div className=" flex flex-1 flex-col gap-2">
@@ -242,10 +381,14 @@ export default function Listing() {
               </div>
             ))}
 
-          <button className=" p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80">
+          <button
+            disabled={loading || uploading}
+            className=" p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+          >
             {" "}
-            Create Listing
+            {loading ? "Creating..." : "Create Listing"}
           </button>
+          {error && <p className=" text-red-400 text-sm">{error}</p>}
         </div>
       </form>
     </main>
