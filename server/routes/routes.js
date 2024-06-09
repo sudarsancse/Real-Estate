@@ -5,6 +5,7 @@ import {
   signin,
   google,
   createListing,
+  getUserListings,
 } from "../Controllers/userController.js";
 import {update, deleteUser, signout} from "../Controllers/userupdate.js";
 import {verifyToken} from "../utils/verifyUser.js";
@@ -26,5 +27,8 @@ router.delete("/delete/:id", verifyToken, deleteUser);
 
 // create listiong
 router.post("/create", verifyToken, createListing);
+
+// get listing
+router.get("/listings/:id", verifyToken, getUserListings);
 
 export default router;
