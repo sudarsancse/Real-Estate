@@ -7,7 +7,12 @@ import {
   createListing,
   getUserListings,
 } from "../Controllers/userController.js";
-import {update, deleteUser, signout} from "../Controllers/userupdate.js";
+import {
+  update,
+  deleteUser,
+  signout,
+  deleteListing,
+} from "../Controllers/userupdate.js";
 import {verifyToken} from "../utils/verifyUser.js";
 
 const router = express.Router();
@@ -30,5 +35,8 @@ router.post("/create", verifyToken, createListing);
 
 // get listing
 router.get("/listings/:id", verifyToken, getUserListings);
+
+// listing delete
+router.delete("/deletelisting/:id", verifyToken, deleteListing);
 
 export default router;

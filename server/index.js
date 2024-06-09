@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({path: "../.env"});
 import userRouter from "./routes/routes.js";
+/* import listingRoute from "./routes/listing.route.js"; */
 import cookieParser from "cookie-parser";
 
 mongoose
@@ -21,6 +22,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/", userRouter);
+
+// delete listing route
+/* app.use("/listing", listingRoute); */
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

@@ -1,5 +1,6 @@
 import User from "../models/UserModel.js";
 import {errorHandler} from "../utils/error.js";
+import Listing from "../models/listing.User.js";
 import bcryptjs from "bcryptjs";
 
 //USER -Update route page
@@ -49,6 +50,26 @@ export const signout = async (req, res, next) => {
   try {
     res.clearCookie("access_token");
     res.status(200).json("User has been signout");
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete  Listings
+export const deleteListing = async (req, res, next) => {
+  const listing = await Listing.findById(req.params.id);
+
+  if (!listing) {
+    return next(errorHandler(404, "Listing not found!"));
+  }
+
+  if (req.user.id !== listing.UserRef) {
+    return next(errorHandler(401, "You can only delete your own listings!"));
+  }
+
+  try {
+    await Listing.findByIdAndDelete(req.params.id);
+    res.status(200).json("Listing has been deleted!");
   } catch (error) {
     next(error);
   }
