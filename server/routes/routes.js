@@ -13,6 +13,7 @@ import {
   signout,
   deleteListing,
   editlist,
+  getListing,
 } from "../Controllers/userupdate.js";
 import {verifyToken} from "../utils/verifyUser.js";
 
@@ -42,5 +43,6 @@ router.delete("/deletelisting/:id", verifyToken, deleteListing);
 
 // update or edit the listing
 router.post("/editlist/:id", verifyToken, editlist);
+router.get("/get/:id", getListing);
 
 export default router;

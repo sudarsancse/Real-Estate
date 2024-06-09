@@ -284,9 +284,11 @@ function Profile() {
                 >
                   delete
                 </button>
-                <button className=" cursor-pointer text-green-700 uppercase text-center">
-                  edit
-                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className=" cursor-pointer text-green-700 uppercase text-center">
+                    edit
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
