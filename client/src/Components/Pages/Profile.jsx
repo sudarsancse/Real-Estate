@@ -31,6 +31,7 @@ function Profile() {
   const dispatch = useDispatch();
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
+  const [showListings, setShowListings] = useState(false);
 
   useEffect(() => {
     if (file) {
@@ -126,34 +127,20 @@ function Profile() {
   // user listing
   const handleShowListings = async () => {
     try {
-      setShowListingsError(false);
-      const res = await fetch(`/listings/${currentUser._id}`);
-      const data = await res.json();
-      if (data.success === false) {
-        setShowListingsError(true);
-        return;
+      if (!showListings) {
+        const res = await fetch(`/listings/${currentUser._id}`);
+        const data = await res.json();
+        if (data.success === false) {
+          setShowListingsError(true);
+          return;
+        }
+        setUserListings(data);
       }
-
-      setUserListings(data);
+      setShowListings(!showListings);
     } catch (error) {
       setShowListingsError(true);
     }
   };
-
-  /* const handelListing = async () => {
-    try {
-      setShowListingsError(false);
-      const res = await fetch(`/listings/${currentUser._id}`);
-      const data = await res.json();
-      if (data.success === false) {
-        setShowListingsError(true);
-        return;
-      }
-      setUserListings(data);
-    } catch (error) {
-      setShowListingsError(true);
-    }
-  }; */
 
   return (
     <div className=" p-3 mx-auto max-w-lg">
@@ -239,13 +226,13 @@ function Profile() {
       <p className=" text-green-700 mt-5 text-center">
         {updateSuccess ? "Update Success Fully" : ""}
       </p>
-      <button className=" text-green-700 w-full" onClick={handleShowListings}>
-        Show Lists
+      <button className="text-green-700 w-full" onClick={handleShowListings}>
+        {showListings ? "Hide Lists" : "Show Lists"}
       </button>
       <p className=" text-red-700 text-sm">
         {showListingsError ? "Error showing the Lists" : ""}
       </p>
-      {userListings && userListings.length > 0 && (
+      {showListings && userListings && userListings.length > 0 && (
         <div className=" flex flex-col gap4">
           <h1 className=" text-center mt-7 text-2xl font-semibold">
             {" "}
