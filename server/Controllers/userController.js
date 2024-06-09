@@ -3,6 +3,7 @@ import User from "../models/UserModel.js";
 import {errorHandler} from "../utils/error.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import Listing from "../models/listing.User.js";
 dotenv.config({path: "../.env"});
 
 export const test = (req, res) => {
@@ -75,6 +76,17 @@ export const google = async (req, res, next) => {
         .status(200)
         .json(rest);
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// create listing user
+
+export const createListing = async (req, res, next) => {
+  try {
+    const listing = await Listing.create(req.body);
+    return res.status(200).json(listing);
   } catch (error) {
     next(error);
   }
