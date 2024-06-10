@@ -22,7 +22,7 @@ export default function CreateListing() {
     name: "",
     description: "",
     address: "",
-    typeOfPlace: "rent",
+    typeOfPlace: "",
     price: 0,
     discountPrice: 0,
     barthRoom: 1,
@@ -100,12 +100,13 @@ export default function CreateListing() {
     if (e.target.id === "sale" || e.target.id === "rent") {
       setFromData({
         ...fromData,
-        type: e.target.id,
+        typeOfPlace: e.target.id,
       });
     }
     if (
       e.target.id === "parking" ||
       e.target.id === "furnished" ||
+      e.target.id === "offer" ||
       e.target.id === "offer"
     ) {
       setFromData({
@@ -205,7 +206,7 @@ export default function CreateListing() {
                 id="sale"
                 className=" w-5"
                 onChange={handelChange}
-                checked={fromData.type === "sale"}
+                checked={fromData.typeOfPlace === "sale"}
               />
               <span>Sell</span>
             </div>
@@ -215,7 +216,7 @@ export default function CreateListing() {
                 id="rent"
                 className=" w-5"
                 onChange={handelChange}
-                checked={fromData.type === "rent"}
+                checked={fromData.typeOfPlace === "rent"}
               />
               <span>Rent</span>
             </div>

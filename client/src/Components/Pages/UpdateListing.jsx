@@ -23,7 +23,7 @@ export default function UpdateListing() {
     name: "",
     description: "",
     address: "",
-    typeOfPlace: "rent",
+    typeOfPlace: "",
     price: 0,
     discountPrice: 0,
     barthRoom: 1,
@@ -116,7 +116,7 @@ export default function UpdateListing() {
     if (e.target.id === "sale" || e.target.id === "rent") {
       setFromData({
         ...fromData,
-        type: e.target.id,
+        typeOfPlace: e.target.id,
       });
     }
     if (
@@ -216,7 +216,7 @@ export default function UpdateListing() {
                 id="sale"
                 className="w-5"
                 onChange={handelChange}
-                checked={fromData.type === "sale"}
+                checked={fromData.typeOfPlace === "sale"}
               />
               <span>Sell</span>
             </div>
@@ -226,7 +226,7 @@ export default function UpdateListing() {
                 id="rent"
                 className="w-5"
                 onChange={handelChange}
-                checked={fromData.type === "rent"}
+                checked={fromData.typeOfPlace === "rent"}
               />
               <span>Rent</span>
             </div>
