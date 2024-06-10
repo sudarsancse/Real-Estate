@@ -6,6 +6,7 @@ import {
   google,
   createListing,
   getUserListings,
+  getUserContact,
 } from "../Controllers/userController.js";
 import {
   update,
@@ -44,5 +45,8 @@ router.delete("/deletelisting/:id", verifyToken, deleteListing);
 // update or edit the listing
 router.post("/editlist/:id", verifyToken, editlist);
 router.get("/get/:id", getListing);
+
+// contact page
+router.get("/:id", verifyToken, getUserContact);
 
 export default router;
