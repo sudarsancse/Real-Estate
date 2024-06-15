@@ -19,9 +19,9 @@ function Header() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const searchTermUrl = urlParams.get("searchText");
-    if (searchTermUrl) {
-      setSearchText(searchTermUrl);
+    const searchTextFromUrl = urlParams.get("searchText");
+    if (searchTextFromUrl) {
+      setSearchText(searchTextFromUrl);
     }
   }, [window.location.search]);
 

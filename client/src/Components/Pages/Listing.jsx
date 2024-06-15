@@ -106,7 +106,6 @@ export default function CreateListing() {
     if (
       e.target.id === "parking" ||
       e.target.id === "furnished" ||
-      e.target.id === "offer" ||
       e.target.id === "offer"
     ) {
       setFromData({
@@ -302,7 +301,7 @@ export default function CreateListing() {
               />
               <div className=" flex flex-col items-center">
                 <p className="">Regular price</p>
-                {fromData.type === "rent" && (
+                {fromData.typeOfPlace === "rent" && (
                   <span className=" text-green-700 text-sm">
                     (Rs: {fromData.price} / month)
                   </span>
@@ -321,7 +320,7 @@ export default function CreateListing() {
                 />
                 <div className=" flex flex-col items-center">
                   <p className="">Discounted price</p>
-                  {fromData.type === "rent" && (
+                  {fromData.typeOfPlace === "rent" && (
                     <span className=" text-green-700 text-sm">
                       (Rs: {fromData.discountPrice} / month)
                     </span>

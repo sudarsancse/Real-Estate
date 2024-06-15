@@ -16,7 +16,7 @@ import {
   editlist,
   getListing,
 } from "../Controllers/userupdate.js";
-import {getListings} from "../Controllers/Search.Functionality.js";
+
 import {verifyToken} from "../utils/verifyUser.js";
 
 const router = express.Router();
@@ -49,8 +49,5 @@ router.get("/get/:id", getListing);
 
 // contact page
 router.get("/:id", verifyToken, getUserContact);
-
-// search function route
-router.get("/get", getListings);
 
 export default router;

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({path: "../.env"});
 import userRouter from "./routes/routes.js";
+import searchRouter from "./routes/search.routes.js";
 import cookieParser from "cookie-parser";
 
 mongoose
@@ -19,6 +20,9 @@ const app = express();
 app.use(express.json());
 
 app.use(cookieParser());
+
+//search route
+app.use("/", searchRouter);
 
 app.use("/", userRouter);
 
