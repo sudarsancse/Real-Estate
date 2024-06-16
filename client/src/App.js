@@ -10,6 +10,7 @@ import CreateListing from "./Components/Pages/Listing";
 import UpdateListing from "./Components/Pages/UpdateListing";
 import ListPage from "./Components/Pages/ListPage";
 import Search from "./Components/Search";
+import Footer from "./Components/Footer";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           }
         />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
