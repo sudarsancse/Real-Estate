@@ -5,6 +5,7 @@ dotenv.config({path: "../.env"});
 import userRouter from "./routes/routes.js";
 import searchRouter from "./routes/search.routes.js";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -14,6 +15,8 @@ mongoose
   .catch((err) => {
     console.error("Failed to connect to MongoDB:", err);
   });
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -25,6 +28,12 @@ app.use(cookieParser());
 app.use("/", searchRouter);
 
 app.use("/", userRouter);
+
+app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
