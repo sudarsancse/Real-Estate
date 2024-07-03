@@ -1,7 +1,4 @@
 import Razorpay from "razorpay";
-import User from "../models/UserModel.js";
-import {errorHandler} from "../utils/error.js";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config({path: "../.env"});
 import crypto from "crypto";

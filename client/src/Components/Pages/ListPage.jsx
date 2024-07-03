@@ -11,7 +11,6 @@ import {
   FaBath,
   FaBed,
   FaChair,
-  FaMapMarkedAlt,
   FaMapMarkerAlt,
   FaParking,
 } from "react-icons/fa";
@@ -24,7 +23,6 @@ export default function ListPage() {
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [contact, setContact] = useState(false);
-  //const [payment, setPayment] = useState(false);
   const params = useParams();
   const {currentUser} = useSelector((state) => state.user);
   //generateReceiptId
@@ -54,7 +52,7 @@ export default function ListPage() {
       }),
     });
     const order = await res.json();
-    console.log("order", order);
+    // console.log("order", order);
 
     var option = {
       key: "",

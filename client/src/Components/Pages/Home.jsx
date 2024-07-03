@@ -12,32 +12,31 @@ function Home() {
   const [rentListings, setRentListings] = useState([]);
 
   SwiperCore.use([Navigation]);
-  //console.log(rentListings);
 
   useEffect(() => {
-    const featchOfferListings = async () => {
+    const fetchOfferListings = async () => {
       try {
         const res = await fetch("/search?offer=true&limit=4");
         const data = await res.json();
         setOfferListings(data);
-        featchRentListings();
+        fetchRentListings();
       } catch (error) {
         console.log(error);
       }
     };
 
-    const featchRentListings = async () => {
+    const fetchRentListings = async () => {
       try {
         const res = await fetch("/search?typeOfPlace=rent&limit=4");
         const data = await res.json();
         setRentListings(data);
-        featchSaleListings();
+        fetchSaleListings();
       } catch (error) {
         console.log(error);
       }
     };
 
-    const featchSaleListings = async () => {
+    const fetchSaleListings = async () => {
       try {
         const res = await fetch("/search?typeOfPlace=sale&limit=4");
         const data = await res.json();
@@ -47,24 +46,24 @@ function Home() {
       }
     };
 
-    featchOfferListings();
+    fetchOfferListings();
   }, []);
 
   return (
     <div>
-      <div className=" flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto">
-        <h1 className=" text-slate-700 font-bold text-3xl lg:text-6xl">
-          Find your next <span className=" text-pink-700">perfect</span>
+      <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto">
+        <h1 className="text-slate-700 font-bold text-3xl lg:text-6xl">
+          Find your next <span className="text-pink-700">perfect</span>
           <br /> place
         </h1>
-        <div className=" text-gray-400 text-xs sm:text-sm">
-          DreamHome is the best place to find your next perfect place to livee.
+        <div className="text-gray-400 text-xs sm:text-sm">
+          DreamHome is the best place to find your next perfect place to live.
           <br />
-          we have a wirde range of properties for you to chose from.
+          We have a wide range of properties for you to choose from.
         </div>
         <Link
           to="/search"
-          className=" text-xs sm:text-sm text-blue-800 font-bold hover:underline"
+          className="text-xs sm:text-sm text-blue-800 font-bold hover:underline"
         >
           Let's get started
         </Link>
@@ -73,14 +72,13 @@ function Home() {
         {offerListings &&
           offerListings.length > 0 &&
           offerListings.map((listing) => (
-            <SwiperSlide>
+            <SwiperSlide key={listing._id}>
               <div
                 style={{
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
                   backgroundSize: "cover",
                 }}
                 className="h-[500px]"
-                key={listing._id}
               ></div>
             </SwiperSlide>
           ))}
