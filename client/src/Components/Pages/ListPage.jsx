@@ -65,7 +65,7 @@ export default function ListPage() {
       order_id: order.id,
       handler: async function (response) {
         const body = {...response};
-        const validateResponse = await fetch("/validate", {
+        const validateResponse = await fetch(`/validate/${params.listingId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -73,6 +73,9 @@ export default function ListPage() {
           body: JSON.stringify(body),
         });
         const jsonResponse = await validateResponse.json();
+        if (jsonResponse.msg === "Transaction is legit!") {
+          setListing((prevState) => ({...prevState, soldOut: true}));
+        }
 
         console.log("jsonResponse", jsonResponse);
       },
@@ -229,17 +232,24 @@ export default function ListPage() {
               </button>
             )}
             {contact && <Contact listing={listing} />}
-            {currentUser && listing.UserRef !== currentUser._id && (
-              <button
-                onClick={paymentHandel}
-                className=" bg-green-700 text-white rounded-lg  hover:opacity-95 p-3"
-              >
-                {`Pay ${
-                  listing.offer
-                    ? listing.discountPrice.toLocaleString("en-US")
-                    : listing.price.toLocaleString("en-US")
-                }`}
-              </button>
+            {listing.soldOut ? (
+              <p className="bg-red-500 text-white rounded-lg p-3 text-center">
+                Sold Out
+              </p>
+            ) : (
+              currentUser &&
+              listing.UserRef !== currentUser._id && (
+                <button
+                  onClick={paymentHandel}
+                  className=" bg-green-700 text-white rounded-lg  hover:opacity-95 p-3"
+                >
+                  {`Pay ${
+                    listing.offer
+                      ? listing.discountPrice.toLocaleString("en-US")
+                      : listing.price.toLocaleString("en-US")
+                  }`}
+                </button>
+              )
             )}
           </div>
         </>

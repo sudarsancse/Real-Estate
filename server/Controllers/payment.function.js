@@ -2,6 +2,7 @@ import Razorpay from "razorpay";
 import dotenv from "dotenv";
 dotenv.config({path: "../.env"});
 import crypto from "crypto";
+import Listing from "../models/listing.User.js";
 
 export const testp = (req, res) => {
   res.json({
@@ -48,9 +49,16 @@ export const validate = async (req, res, next) => {
     return res.status(400).json({msg: " Transaction is not legit!"});
   }
 
-  res.json({
-    msg: " Transaction is legit!",
-    orderId: razorpay_order_id,
-    paymentId: razorpay_payment_id,
-  });
+  try {
+    // Update listing to mark as sold out
+    await Listing.findByIdAndUpdate(req.params.id, {soldOut: true});
+
+    res.json({
+      msg: "Transaction is legit!",
+      orderId: razorpay_order_id,
+      paymentId: razorpay_payment_id,
+    });
+  } catch (error) {
+    res.status(500).json({msg: "Failed to update listing", error});
+  }
 };

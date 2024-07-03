@@ -5,5 +5,5 @@ const router = express.Router();
 
 router.get("/testp", testp);
 router.post("/payment", payment);
-router.post("/validate", validate);
+router.post("/validate/:id", validate);
 export default router;

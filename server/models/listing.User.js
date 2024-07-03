@@ -58,6 +58,10 @@ const listingSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    soldOut: {
+      type: Boolean,
+      require: true,
+    },
   },
   {timestamps: true}
 );
