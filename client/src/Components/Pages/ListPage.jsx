@@ -88,7 +88,7 @@ export default function ListPage() {
       },
     };
 
-    var rzp1 = new Razorpay(option);
+    var rzp1 = new window.Razorpay(option);
     rzp1.on("payment.failed", function (response) {
       alert(response.error.code);
       alert(response.error.description);
