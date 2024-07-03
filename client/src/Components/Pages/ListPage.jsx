@@ -24,8 +24,86 @@ export default function ListPage() {
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [contact, setContact] = useState(false);
+  //const [payment, setPayment] = useState(false);
   const params = useParams();
   const {currentUser} = useSelector((state) => state.user);
+  //generateReceiptId
+  const generateReceiptId = () => {
+    return `receipt_${new Date().getTime()}_${Math.floor(
+      Math.random() * 1000
+    )}`;
+  };
+
+  //paymeny gateway
+  const paymentHandel = async (event) => {
+    const amount = listing.offer
+      ? listing.discountPrice * 100
+      : listing.price * 100; // Convert to paise for Razorpay
+    const currency = "INR";
+    const receiptId = generateReceiptId();
+
+    const res = await fetch(`/payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount,
+        currency,
+        receipt: receiptId,
+      }),
+    });
+    const order = await res.json();
+    console.log("order", order);
+
+    var option = {
+      key: "",
+      amount,
+      currency,
+      name: "Dram Home",
+      description: "Test Transaction",
+      image:
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fpng%2F22285976-letter-d-pink-alphabet-glossy&psig=AOvVaw3T5HCfYzA8vKUCjmDKLm66&ust=1720103317961000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCKDes6iKi4cDFQAAAAAdAAAAABAE",
+      order_id: order.id,
+      handler: async function (response) {
+        const body = {...response};
+        const validateResponse = await fetch("/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+        const jsonResponse = await validateResponse.json();
+
+        console.log("jsonResponse", jsonResponse);
+      },
+      prefill: {
+        name: currentUser.name,
+        email: currentUser.email,
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    var rzp1 = new Razorpay(option);
+    rzp1.on("payment.failed", function (response) {
+      alert(response.error.code);
+      alert(response.error.description);
+      alert(response.error.source);
+      alert(response.error.step);
+      alert(response.error.reason);
+      alert(response.error.metadata.order_id);
+      alert(response.error.metadata.payment_id);
+    });
+
+    rzp1.open();
+    event.preventDefault();
+  };
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -153,6 +231,18 @@ export default function ListPage() {
               </button>
             )}
             {contact && <Contact listing={listing} />}
+            {currentUser && listing.UserRef !== currentUser._id && (
+              <button
+                onClick={paymentHandel}
+                className=" bg-green-700 text-white rounded-lg  hover:opacity-95 p-3"
+              >
+                {`Pay ${
+                  listing.offer
+                    ? listing.discountPrice.toLocaleString("en-US")
+                    : listing.price.toLocaleString("en-US")
+                }`}
+              </button>
+            )}
           </div>
         </>
       )}

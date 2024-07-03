@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config({path: "../.env"});
 import userRouter from "./routes/routes.js";
 import searchRouter from "./routes/search.routes.js";
+import paymentGatewayRouter from "./routes/paymentGatway.routes.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 
@@ -23,6 +24,9 @@ const app = express();
 app.use(express.json());
 
 app.use(cookieParser());
+
+// payment gatway
+app.use("/", paymentGatewayRouter);
 
 //search route
 app.use("/", searchRouter);
