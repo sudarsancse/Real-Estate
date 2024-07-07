@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {Link, useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import {
   signInFailure,
   signInSuccess,
@@ -10,7 +10,7 @@ import Oauth from "./Oauth";
 
 function Signin() {
   const [formData, setForData] = useState({});
-  const {loading, error} = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const disPatch = useDispatch();
   const handelChange = (e) => {
@@ -53,8 +53,8 @@ function Signin() {
       <form className=" flex flex-col gap-4" onSubmit={handelSubmit}>
         <input
           onChange={handelChange}
-          type="email"
-          placeholder="Email"
+          type="text"
+          placeholder="Username, email"
           className=" border p-3 rounded-lg"
           id="email"
         />

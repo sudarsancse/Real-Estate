@@ -1,10 +1,10 @@
 import bcryptjs from "bcryptjs";
 import User from "../models/UserModel.js";
-import {errorHandler} from "../utils/error.js";
+import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import Listing from "../models/listing.User.js";
-dotenv.config({path: "../.env"});
+dotenv.config({ path: "../.env" });
 
 export const test = (req, res) => {
   res.json({
@@ -14,10 +14,10 @@ export const test = (req, res) => {
 
 // sign-Up page
 export const signup = async (req, res, next) => {
-  const {username, email, password} = req.body;
+  const { username, email, password } = req.body;
 
   const hashPassword = bcryptjs.hashSync(password, 15);
-  const newUser = new User({username, email, password: hashPassword});
+  const newUser = new User({ username, email, password: hashPassword });
 
   try {
     await newUser.save();
@@ -30,15 +30,20 @@ export const signup = async (req, res, next) => {
 // sign-In page
 
 export const signin = async (req, res, next) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   try {
-    const validUser = await User.findOne({email});
+    const validUser = await User.findOne({
+      $or: [{ email: email }, { username: email }],
+    });
     if (!validUser) return next(errorHandler(404, "User not found"));
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(404, "invalid password"));
-    const token = jwt.sign({id: validUser._id}, process.env.SECRETKEY_JWT);
-    const {password: pass, ...rest} = validUser._doc;
-    res.cookie("access_token", token, {httpOnly: true}).status(200).json(rest);
+    const token = jwt.sign({ id: validUser._id }, process.env.SECRETKEY_JWT);
+    const { password: pass, ...rest } = validUser._doc;
+    res
+      .cookie("access_token", token, { httpOnly: true })
+      .status(200)
+      .json(rest);
   } catch (error) {
     next(error);
   }
@@ -47,12 +52,12 @@ export const signin = async (req, res, next) => {
 // Oauth || // google page
 export const google = async (req, res, next) => {
   try {
-    const user = await User.findOne({email: req.body.email});
+    const user = await User.findOne({ email: req.body.email });
     if (user) {
-      const token = jwt.sign({id: user._id}, process.env.SECRETKEY_JWT);
-      const {password: pass, ...rest} = user._doc;
+      const token = jwt.sign({ id: user._id }, process.env.SECRETKEY_JWT);
+      const { password: pass, ...rest } = user._doc;
       res
-        .cookie("access_token", token, {httpOnly: true})
+        .cookie("access_token", token, { httpOnly: true })
         .status(200)
         .json(rest);
     } else {
@@ -69,10 +74,10 @@ export const google = async (req, res, next) => {
         avatar: req.body.photo,
       });
       await newUser.save();
-      const token = jwt.sign({id: newUser._id}, process.env.SECRETKEY_JWT);
-      const {password: pass, ...rest} = newUser._doc;
+      const token = jwt.sign({ id: newUser._id }, process.env.SECRETKEY_JWT);
+      const { password: pass, ...rest } = newUser._doc;
       res
-        .cookie("access_token", token, {httpOnly: true})
+        .cookie("access_token", token, { httpOnly: true })
         .status(200)
         .json(rest);
     }
@@ -96,7 +101,7 @@ export const createListing = async (req, res, next) => {
 export const getUserListings = async (req, res, next) => {
   if (req.user.id === req.params.id) {
     try {
-      const listings = await Listing.find({UserRef: req.params.id});
+      const listings = await Listing.find({ UserRef: req.params.id });
       res.status(200).json(listings);
     } catch (error) {
       next(error);
@@ -114,7 +119,7 @@ export const getUserContact = async (req, res, next) => {
 
     if (!user) return next(errorHandler(404, "User not found!"));
 
-    const {password: pass, ...rest} = user._doc;
+    const { password: pass, ...rest } = user._doc;
 
     res.status(200).json(rest);
   } catch (error) {
