@@ -2,7 +2,6 @@
 
 ### Description
 
-![Logo](https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png)
 This project is a user authentication system built with React, Redux, and a Node.js backend. It includes features such as user sign-in, sign-up, and password update functionality.
 
 ## 🔗 Links
