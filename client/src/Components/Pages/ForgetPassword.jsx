@@ -126,7 +126,7 @@ function ForgetPassword() {
               value={otp}
               required
             />
-            <p className=" px-4 text-right text-xs text-red-700 font-bold">{`Time left: ${formatTime(
+            <p className=" text-xs font-bold">{`Time left: ${formatTime(
               timer
             )}`}</p>
           </div>

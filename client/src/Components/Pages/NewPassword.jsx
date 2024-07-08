@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 function NewPassword() {
   const [updatedPass, setUpdatedPass] = useState({});
   const navigate = useNavigate();
-  const params = useParams();
+  const { id } = useParams();
 
   const handelChange = (e) => {
     setUpdatedPass({
@@ -21,7 +21,7 @@ function NewPassword() {
       return;
     }
     try {
-      const res = await fetch(`/updated-password/${params.ID}`, {
+      const res = await fetch(`/updated-password/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

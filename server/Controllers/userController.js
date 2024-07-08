@@ -223,10 +223,11 @@ export const verifyOtp = async (req, res, next) => {
     const otpCode = data.Code;
     const ID = data.UserRef;
     if (otpCode === otp) {
-      return res.json({
+      return res.status(200).json({
         success: true,
+        message: "OTP verified successfully",
         statusCode: 200,
-        message: "Password updated successfully",
+        ID,
       });
     } else {
       return res
@@ -245,6 +246,7 @@ export const updatedPassword = async (req, res, next) => {
 
   try {
     const user = await User.findById({ _id: id });
+
     if (!user) {
       return res
         .status(404)
