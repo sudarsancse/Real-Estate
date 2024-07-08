@@ -1,10 +1,11 @@
-import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Oauth from "./Oauth";
 
 function SignUp() {
   const [formData, setForData] = useState({});
-  const [error, setError] = useState(null);
+  //const [error, toast.error] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handelChange = (e) => {
@@ -29,15 +30,15 @@ function SignUp() {
       console.log(data);
       if (data.success === false) {
         setLoading(false);
-        setError(data.message);
+        toast.error(data.message);
         return;
       }
       setLoading(false);
-      setError(null);
+      toast.error(null);
       navigate("/sign-in");
     } catch (error) {
       setLoading(false);
-      setError(error.message);
+      toast.error(error.message);
     }
 
     //console.log(data);
@@ -48,13 +49,22 @@ function SignUp() {
     <div className=" p-3 max-w-lg mx-auto">
       <h1 className=" text-3xl text-center font-semibold my-7">Sign Up</h1>
       <form className=" flex flex-col gap-4" onSubmit={handelSubmit}>
-        <input
-          onChange={handelChange}
-          type="text "
-          placeholder="Username"
-          className=" border p-3 rounded-lg"
-          id="username"
-        />
+        <div className=" flex flex-col sm:justify-between sm:flex-row gap-4">
+          <input
+            onChange={handelChange}
+            type="text"
+            placeholder="Name"
+            className="w-80 border p-3 rounded-lg"
+            id="name"
+          />
+          <input
+            onChange={handelChange}
+            type="text "
+            placeholder="Username"
+            className=" w-80 border p-3 rounded-lg"
+            id="username"
+          />
+        </div>
         <input
           onChange={handelChange}
           type="email"
@@ -84,7 +94,6 @@ function SignUp() {
           <span className=" text-blue-700 underline">Sign in</span>
         </Link>
       </div>
-      {error && <p className=" text-red-500 mt-5">{error}</p>}
     </div>
   );
 }

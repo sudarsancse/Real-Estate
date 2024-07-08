@@ -14,12 +14,14 @@ const NotFoundPage = () => {
         </h1>
         <div className="text-center text-gray-500 mb-8">
           <p>
-            Lorem ipsum dolor sit amet, sea putant suscipit invidunt cu. Nonumy
-            scripserit id per. Cu quis theophrastus reprehendunt nec.
+            Oops! It seems you've reached a page that doesn't exist. The page
+            you are looking for might have been removed, had its name changed,
+            or is temporarily unavailable.
           </p>
           <p>
-            Vero invidunt splendide te vim, cu mea voluptaria. Lorem consequat
-            adversarium vel an.
+            Please check the URL for any mistakes and try again. If you still
+            can't find what you're looking for, go back to the homepage or
+            contact us for further assistance.
           </p>
         </div>
         <Link

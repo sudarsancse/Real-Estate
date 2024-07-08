@@ -1,12 +1,12 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import {app} from "../../fireBase.js";
+import { app } from "../../fireBase.js";
 import {
   updateUserStart,
   updateUserFailure,
@@ -18,10 +18,10 @@ import {
   signOutUserSuccess,
   signOutUserFailure,
 } from "../../Redux/User/userSlice.js";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Profile() {
-  const {currentUser, loading, error} = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const filerRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
@@ -57,14 +57,14 @@ function Profile() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({...formData, avatar: downloadURL})
+          setFormData({ ...formData, avatar: downloadURL })
         );
       }
     );
   };
 
   const handelChange = (e) => {
-    setFormData({...formData, [e.target.id]: e.target.value});
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -195,6 +195,14 @@ function Profile() {
             ""
           )}
         </p>
+        <input
+          onChange={handelChange}
+          type="text"
+          placeholder="username"
+          defaultValue={currentUser.name}
+          id="name"
+          className=" border p-3 rounded-lg"
+        />
         <input
           onChange={handelChange}
           type="text"

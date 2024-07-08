@@ -15,15 +15,43 @@ export const test = (req, res) => {
 };
 
 // sign-Up page
-export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
 
-  const hashPassword = bcryptjs.hashSync(password, 15);
-  const newUser = new User({ username, email, password: hashPassword });
+export const signup = async (req, res, next) => {
+  const { name, username, email, password } = req.body;
 
   try {
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+
+    if (existingUser) {
+      let message;
+      if (existingUser.email === email) {
+        message = "Email already exists.";
+      } else if (existingUser.username === username) {
+        message = "Username already exists.";
+      }
+
+      return res.status(400).json({
+        success: false,
+        statusCode: 400,
+        message,
+      });
+    }
+
+    const hashPassword = bcryptjs.hashSync(password, 15);
+    const newUser = new User({
+      username,
+      email,
+      password: hashPassword,
+      name,
+    });
+
     await newUser.save();
-    res.status(201).json("User created Sucess");
+
+    res.status(201).json({
+      success: true,
+      statusCode: 201,
+      message: "User created successfully.",
+    });
   } catch (error) {
     next(error);
   }
@@ -74,6 +102,7 @@ export const google = async (req, res, next) => {
         email: req.body.email,
         password: hashedPassword,
         avatar: req.body.photo,
+        name: req.body.name,
       });
       await newUser.save();
       const token = jwt.sign({ id: newUser._id }, process.env.SECRETKEY_JWT);
@@ -136,7 +165,7 @@ export const sendEmail = async (req, res, next) => {
   const email = await User.findOne({ email: data });
   if (!email) return next(errorHandler(404, "email id not found"));
   try {
-    const username = email.username;
+    const name = email.name;
     const userId = email._id;
     let otpGenerate = Math.floor(1000 + Math.random() * 9000);
 
@@ -159,10 +188,10 @@ export const sendEmail = async (req, res, next) => {
     const info = await transporter.sendMail({
       from: '"Dream Home 🏡" <sudarsansarkarcst@gmail.com>', // sender address
       to: email.email, // list of receivers
-      subject: `Hello ${username} ✔ `, // Subject line
+      subject: `Hello ${name} ✔ `, // Subject line
       text: "Hello world?", // plain text body
       html: `<div style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <p style="font-size: 20px">Dear <strong style="color: #7286D3;">${username}</strong>,</p>
+                <p style="font-size: 20px">Dear <strong style="color: #7286D3;">${name}</strong>,</p>
                 <p>We received a request to reset the password for your account. To proceed with the password reset, please use the following One-Time Password (OTP):</p>
                 <p style="font-size: 20px; font-weight: bold; color: #e74c3c;">Your OTP is: ${otpGenerate}</p>
                 <p style="color: #e74c3c;">Please note: This OTP is valid for only 2 minutes. If you did not request a password reset, please ignore this email or contact our support team.</p>
@@ -194,11 +223,10 @@ export const verifyOtp = async (req, res, next) => {
     const otpCode = data.Code;
     const ID = data.UserRef;
     if (otpCode === otp) {
-      return res.status(200).json({
+      return res.json({
         success: true,
-        message: "OTP verified successfully",
         statusCode: 200,
-        ID,
+        message: "Password updated successfully",
       });
     } else {
       return res
