@@ -13,6 +13,7 @@ import Search from "./Components/Search";
 import Footer from "./Components/Footer";
 import ForgetPassword from "./Components/Pages/ForgetPassword";
 import NewPassword from "./Components/Pages/NewPassword";
+import NotFoundPage from "./Components/Error";
 
 function App() {
   return (
@@ -35,15 +36,7 @@ function App() {
             element={<UpdateListing />}
           />
         </Route>
-        <Route
-          path="*"
-          element={
-            <h1 className=" text-center text-red-700 text-xl mt-10">
-              {" "}
-              404 page note found{" "}
-            </h1>
-          }
-        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>
