@@ -203,7 +203,7 @@ export const sendEmail = async (req, res, next) => {
 
     //console.log("Message sent: %s", info.messageId);
     const response = await otpData.save();
-    next(successHandler(201, "Please check your email ID and enter the OTP"));
+    next(successHandler(201, "Please check your email and enter the OTP"));
     //res.status(201).json("Please check your email ID and enter the OTP");
   } catch (error) {
     next(error);

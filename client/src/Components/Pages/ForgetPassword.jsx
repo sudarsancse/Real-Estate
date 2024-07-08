@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +7,24 @@ function ForgetPassword() {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(120);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let interval;
+    if (otpSent) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer === 0) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [otpSent]);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -45,7 +62,6 @@ function ForgetPassword() {
 
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    // Handle OTP verification logic here
     try {
       const res = await fetch(`/verifyOtp`, {
         method: "POST",
@@ -59,7 +75,6 @@ function ForgetPassword() {
 
       if (data.success === true && data.statusCode === 200) {
         toast.success(data.message);
-        // Redirect to password reset page or handle further actions
         navigate(`/new-password/${data.ID}`);
       } else {
         toast.error(data.message);
@@ -67,6 +82,12 @@ function ForgetPassword() {
     } catch (error) {
       toast.error("Error verifying OTP");
     }
+  };
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   return (
@@ -96,14 +117,19 @@ function ForgetPassword() {
         </form>
       ) : (
         <form className="flex flex-col gap-4" onSubmit={handleOtpSubmit}>
-          <input
-            onChange={handleOtpChange}
-            type="text"
-            placeholder="Enter OTP"
-            className="border p-3 rounded-lg"
-            value={otp}
-            required
-          />
+          <div className=" flex flex-col">
+            <input
+              onChange={handleOtpChange}
+              type="text"
+              placeholder="Enter OTP"
+              className="border p-3 rounded-lg"
+              value={otp}
+              required
+            />
+            <p className=" px-4 text-right text-xs text-red-700 font-bold">{`Time left: ${formatTime(
+              timer
+            )}`}</p>
+          </div>
           <button
             type="submit"
             className={`bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 ${
