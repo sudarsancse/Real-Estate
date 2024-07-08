@@ -70,7 +70,7 @@ function ForgetPassword() {
   };
 
   return (
-    <div className="p-3 max-w-lg mx-auto">
+    <div className="p-3 max-w-lg mx-auto py-32">
       <h1 className="text-3xl text-red-700 text-center font-semibold my-7">
         Forget password
       </h1>
