@@ -179,7 +179,7 @@ function Profile() {
             filerRef.current.click();
           }}
           className=" rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
-          src={formData.avatar || currentUser.avatar}
+          src={currentUser.avatar ? currentUser.avatar : formData.avatar}
           alt="profile"
         />
         <p className="text-sm self-center">
