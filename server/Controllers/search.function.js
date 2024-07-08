@@ -9,25 +9,25 @@ export const search = async (req, res, next) => {
     let offer = req.query.offer;
 
     if (offer === undefined || offer === "false") {
-      offer = {$in: [false, true]};
+      offer = { $in: [false, true] };
     }
 
     let furnished = req.query.furnished;
 
     if (furnished === undefined || furnished === "false") {
-      furnished = {$in: [false, true]};
+      furnished = { $in: [false, true] };
     }
 
     let parking = req.query.parking;
 
     if (parking === undefined || parking === "false") {
-      parking = {$in: [false, true]};
+      parking = { $in: [false, true] };
     }
 
     let typeOfPlace = req.query.typeOfPlace;
 
     if (typeOfPlace === undefined || typeOfPlace === "all") {
-      typeOfPlace = {$in: ["sale", "rent"]};
+      typeOfPlace = { $in: ["sale", "rent"] };
     }
 
     const searchText = req.query.searchText || "";
@@ -37,13 +37,13 @@ export const search = async (req, res, next) => {
     const order = req.query.order || "desc";
 
     const listings = await Listing.find({
-      name: {$regex: searchText, $options: "i"},
+      name: { $regex: searchText, $options: "i" },
       offer,
       furnished,
       parking,
       typeOfPlace,
     })
-      .sort({[sort]: order})
+      .sort({ [sort]: order })
       .limit(limit)
       .skip(startIndex);
 

@@ -58,14 +58,22 @@ function Signin() {
           className=" border p-3 rounded-lg"
           id="email"
         />
-        <input
-          onChange={handelChange}
-          type="password"
-          placeholder="Password"
-          className=" border p-3 rounded-lg"
-          autoComplete="off"
-          id="password"
-        />
+        <div className=" flex flex-col">
+          <input
+            onChange={handelChange}
+            type="password"
+            placeholder="Password"
+            className=" border p-3 rounded-lg"
+            autoComplete="off"
+            id="password"
+          />
+          <Link
+            className=" flex justify-end text-blue-700 right"
+            to="/forget-password"
+          >
+            <p className=" text-sm">Forget password ?</p>
+          </Link>
+        </div>
         <button
           disabled={loading}
           className=" bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"

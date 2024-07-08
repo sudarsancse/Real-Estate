@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./Components/Pages/Home";
 import Signin from "./Components/Pages/Signin";
 import SignUp from "./Components/Pages/SignUp";
@@ -11,6 +11,8 @@ import UpdateListing from "./Components/Pages/UpdateListing";
 import ListPage from "./Components/Pages/ListPage";
 import Search from "./Components/Search";
 import Footer from "./Components/Footer";
+import ForgetPassword from "./Components/Pages/ForgetPassword";
+import NewPassword from "./Components/Pages/NewPassword";
 
 function App() {
   return (
@@ -22,7 +24,9 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/about" element={<About />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/list-page/:listingId" element={<ListPage />} />
+        <Route path="/new-password/:id" element={<NewPassword />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-listing" element={<CreateListing />} />

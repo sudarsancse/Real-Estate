@@ -7,6 +7,9 @@ import {
   createListing,
   getUserListings,
   getUserContact,
+  sendEmail,
+  verifyOtp,
+  updatedPassword,
 } from "../Controllers/userController.js";
 import {
   update,
@@ -26,6 +29,12 @@ router.get("/test", test);
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.post("/google", google);
+
+//forget password
+router.post("/sendEmail", sendEmail);
+router.post("/verifyOtp", verifyOtp);
+router.post("/updated-password/:id", updatedPassword);
+
 // sign out the user
 router.get("/signout", signout);
 
